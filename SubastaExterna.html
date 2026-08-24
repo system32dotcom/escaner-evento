@@ -16,61 +16,110 @@
     padding:18px 14px 60px;
   }
   .wrap{max-width:640px;margin:0 auto}
-  h1{font-size:24px;letter-spacing:-.02em;margin-bottom:4px}
-  .meta{color:var(--suave);font-size:14px;margin-bottom:16px}
-  .identidad{
-    background:#fff;border:1px solid var(--linea);border-radius:12px;padding:14px 16px;margin-bottom:16px
-  }
-  .identidad .t{font-size:12.5px;font-weight:700;color:var(--suave);text-transform:uppercase;
-    letter-spacing:.05em;margin-bottom:8px}
-  .identidadVerificada{
-    background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:13px 16px;margin-bottom:16px;
-    display:flex;align-items:center;gap:10px;font-size:14px;color:#166534
-  }
-  .identidadVerificada b{font-size:15.5px}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  h1{font-size:22px;letter-spacing:-.02em}
+  .meta{color:var(--suave);font-size:13.5px;margin-bottom:16px;text-align:center}
+  .encabezado{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;
+    gap:8px;margin-bottom:4px}
+  .encabezado .lado{display:flex;align-items:center}
+  .encabezado img{max-height:34px;max-width:110px;object-fit:contain}
+  .encabezado h1{text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
   input{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;
     font-size:15px;font-family:inherit;background:#fff;color:var(--tinta)}
   .aviso{padding:12px 14px;border-radius:9px;font-size:13.5px;margin-bottom:16px;line-height:1.5}
   .aviso.warn{background:#fffbeb;color:#92400e;border-left:3px solid var(--alerta)}
   .aviso.err{background:#fef2f2;color:#991b1b;border-left:3px solid var(--error)}
-  .card{
-    background:#fff;border:1px solid var(--linea);border-radius:14px;padding:16px;margin-bottom:12px;
-    display:flex;gap:14px;transition:box-shadow .3s
-  }
-  .card.actualizado{box-shadow:0 0 0 2px var(--acento)}
-  .card.cerrado{opacity:.55}
-  .foto{
-    width:84px;height:84px;border-radius:10px;background:#e2e8f0;flex-shrink:0;
-    background-size:cover;background-position:center
-  }
-  .info{flex:1;min-width:0}
-  .nombreArt{font-weight:700;font-size:15.5px;margin-bottom:2px}
-  .descArt{font-size:12.5px;color:var(--suave);margin-bottom:8px;display:-webkit-box;
-    -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .pujaFila{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-  .pujaActual{font-size:19px;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
-  .ganador{font-size:12px;color:var(--suave)}
-  .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700}
-  .pAbierto{background:#dcfce7;color:#166534}
-  .pCerrado{background:#f1f5f9;color:#64748b}
-  .pTiempo{background:#fef3c7;color:#92400e}
-  .fila{display:flex;gap:8px}
-  input.montoPuja{flex:1}
-  button{padding:10px 14px;border:0;border-radius:8px;font-size:13.5px;font-weight:650;
-    cursor:pointer;font-family:inherit;background:var(--acento);color:#fff;white-space:nowrap}
-  button:disabled{background:#94a3b8;cursor:not-allowed}
-  .msgArt{font-size:12px;margin-top:6px}
-  .msgArt.err{color:var(--error)}
-  .msgArt.ok{color:var(--ok)}
-  .cargando{text-align:center;padding:50px 20px;color:var(--suave)}
   .oculto{display:none}
   .avisoConfig{
     background:#7c2d12;color:#fed7aa;padding:13px 15px;border-radius:9px;font-size:13px;
     margin-bottom:14px;line-height:1.5
   }
-  .encabezado{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-  .encabezado img{max-height:34px;max-width:110px;object-fit:contain}
+
+  /* ---- Puerta de identidad (login) ---- */
+  .loginGate{padding:8px 0 4px}
+  .loginCard{
+    background:#fff;border:1px solid var(--linea);border-radius:20px;padding:28px 22px;text-align:center;
+    box-shadow:0 10px 34px rgba(15,23,42,.07);animation:entrarCard .45s ease both;
+  }
+  .loginIcon{font-size:40px;margin-bottom:6px}
+  .loginCard h2{font-size:20px;letter-spacing:-.01em;margin-bottom:6px}
+  .loginCard p{font-size:13.5px;color:var(--suave);margin-bottom:18px}
+  .loginCard input{margin-bottom:10px}
+  .loginCard .msgArt{margin-bottom:8px;text-align:left}
+
+  .identidadVerificada, .identidadGuardada{
+    border-radius:12px;padding:13px 16px;margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;font-size:13.5px;
+  }
+  .identidadVerificada{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+  .identidadGuardada{background:#fff;border:1px solid var(--linea);color:var(--tinta)}
+  .identidadVerificada b, .identidadGuardada b{font-size:14.5px}
+  .identidadGuardada a{color:var(--acento);font-weight:700;text-decoration:none;white-space:nowrap}
+
+  .cargando{text-align:center;padding:50px 20px;color:var(--suave)}
+
+  /* ---- Tarjetas de artículo ---- */
+  @keyframes entrarCard{from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none}}
+  @keyframes pulso{0%{transform:scale(1)} 40%{transform:scale(1.14)} 100%{transform:scale(1)}}
+  @keyframes brillo{
+    0%,100%{box-shadow:0 8px 22px color-mix(in srgb, var(--acento) 45%, transparent)}
+    50%{box-shadow:0 10px 32px color-mix(in srgb, var(--acento) 75%, transparent)}
+  }
+  .card{
+    background:#fff;border:1px solid var(--linea);border-radius:20px;overflow:hidden;margin-bottom:22px;
+    box-shadow:0 4px 18px rgba(15,23,42,.06);transition:box-shadow .3s;animation:entrarCard .4s ease both;
+  }
+  .card.actualizado{box-shadow:0 0 0 3px var(--acento)}
+  .card.cerrado{opacity:.92}
+  .foto{width:100%;aspect-ratio:1/1;background:#e2e8f0;background-size:cover;background-position:center;position:relative}
+  .selloVendido{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(180deg,rgba(15,23,42,.1),rgba(15,23,42,.78));
+  }
+  .selloVendido .txt{
+    color:#fff;font-size:24px;font-weight:800;letter-spacing:.02em;text-align:center;
+    transform:rotate(-7deg);border:3px solid #fff;border-radius:14px;padding:10px 24px;
+    text-shadow:0 4px 14px rgba(0,0,0,.4);background:rgba(220,38,38,.28);
+  }
+  .info{padding:16px 18px 20px}
+  .cabezaArt{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+  .nombreArt{font-weight:800;font-size:18.5px;letter-spacing:-.01em}
+  .descArt{font-size:13px;color:var(--suave);margin:4px 0 12px}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700}
+  .pAbierto{background:#dcfce7;color:#166534}
+  .pCerrado{background:#f1f5f9;color:#64748b}
+  .pTiempo{background:#fef3c7;color:#92400e}
+
+  .pujaBloque{text-align:center;background:var(--fondo);border-radius:14px;padding:14px;margin-bottom:14px}
+  .pujaEtiqueta{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--suave);font-weight:700}
+  .pujaActual{font-size:32px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+    display:inline-block}
+  .pujaActual.pulso{animation:pulso .4s ease}
+  .ganador{font-size:12.5px;color:var(--suave);margin-top:2px}
+
+  .fila{margin-bottom:10px}
+  input.montoPuja{font-size:19px;font-weight:700;text-align:center;padding:12px}
+  .btnPujar{
+    width:100%;padding:16px;border:0;border-radius:12px;font-size:16.5px;font-weight:800;
+    cursor:pointer;color:#fff;font-family:inherit;letter-spacing:.01em;
+    background:linear-gradient(135deg, var(--acento), color-mix(in srgb, var(--acento) 65%, #000));
+    animation: brillo 2.4s ease-in-out infinite;
+  }
+  .btnPujar:active{transform:scale(.98)}
+  .btnPujar:disabled{background:#94a3b8;animation:none;cursor:not-allowed}
+  .msgArt{font-size:12.5px;margin-top:8px}
+  .msgArt.err{color:var(--error)}
+
+  /* ---- Toast de confirmación ---- */
+  .toastGlobal{
+    position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-160%);
+    background:#16a34a;color:#fff;padding:14px 22px;border-radius:14px;font-weight:700;font-size:14.5px;
+    display:flex;align-items:center;gap:10px;box-shadow:0 14px 40px rgba(0,0,0,.28);
+    transition:transform .5s cubic-bezier(.2,.9,.25,1.3);z-index:100;max-width:90vw
+  }
+  .toastGlobal.on{transform:translateX(-50%) translateY(0)}
+  .toastGlobal .ic{font-size:1.3em}
+
   .confianzaPago{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;
     color:var(--suave);margin:18px 0 6px}
   .confianzaPago img{height:20px}
@@ -87,14 +136,20 @@
 </style>
 </head>
 <body>
+<div class="toastGlobal" id="toastGlobal"><span class="ic">🎉</span><span id="toastGlobalTxt"></span></div>
+
 <div class="wrap">
   <div id="avisoConfig" class="avisoConfig oculto">
     ⚠️ Falta configurar la URL del sistema en este archivo (constante <b>API_URL</b>, al inicio del
     &lt;script&gt;).
   </div>
 
-  <div class="encabezado"><img id="logo" class="oculto"><h1 id="tEvento">Subasta</h1></div>
-  <div class="meta">Toca "Pujar" en cualquier artículo — tu puja se registra al instante.</div>
+  <div class="encabezado">
+    <div class="lado"><img id="logo" class="oculto"></div>
+    <h1 id="tEvento">Subasta</h1>
+    <div class="lado"></div>
+  </div>
+  <div class="meta">Toca "¡Pujar ahora!" en cualquier artículo — tu puja se registra al instante.</div>
 
   <div id="avisoInactiva" class="aviso warn oculto">
     La subasta todavía no está activa. Vuelve a intentarlo más tarde.
@@ -105,11 +160,20 @@
     <span>Estás pujando como <b id="miNombreVerificado"></b> — identidad verificada con tu pase.</span>
   </div>
 
-  <div id="identidad" class="identidad oculto">
-    <div class="t">Tus datos (se guardan en este celular)</div>
-    <div class="grid2">
-      <input id="miNombre" type="text" placeholder="Tu nombre">
-      <input id="miContacto" type="text" placeholder="Teléfono o correo">
+  <div id="identidadGuardada" class="identidadGuardada oculto">
+    <span style="font-size:20px">🙋</span>
+    <span>Pujando como <b id="miNombreMostrado"></b> · <a href="javascript:void(0)" onclick="cambiarIdentidad()">cambiar</a></span>
+  </div>
+
+  <div id="pantallaLogin" class="loginGate oculto">
+    <div class="loginCard">
+      <div class="loginIcon">🔨</div>
+      <h2>Únete a la subasta</h2>
+      <p>Ingresa tus datos para empezar a pujar. Cada puja quedará relacionada a tu nombre y contacto.</p>
+      <input id="loginNombre" type="text" placeholder="Tu nombre completo">
+      <input id="loginContacto" type="text" placeholder="Teléfono o correo">
+      <div class="msgArt err oculto" id="loginMsg"></div>
+      <button class="btnPujar" onclick="entrarSubasta()">Empezar a pujar →</button>
     </div>
   </div>
 
@@ -153,13 +217,47 @@ function llamarApi(accion, datos){
 var ARTICULOS = [];
 var TOKEN = new URLSearchParams(window.location.search).get('t') || '';
 var VERIFICADO = false;
+var IDENTIFICADO = false;
+var MI_NOMBRE = '';
+var MI_CONTACTO = '';
 
-document.getElementById('miNombre').value = localStorage.getItem('subasta_nombre') || '';
-document.getElementById('miContacto').value = localStorage.getItem('subasta_contacto') || '';
-document.getElementById('miNombre').addEventListener('input', function(){ localStorage.setItem('subasta_nombre', this.value); });
-document.getElementById('miContacto').addEventListener('input', function(){ localStorage.setItem('subasta_contacto', this.value); });
+var prevMonto = {}, prevImagen = {}, prevEstatus = {};
+var primeraListaCargada = false;
 
 function money(n){ return '$'+Number(n||0).toLocaleString('es-MX',{maximumFractionDigits:0}); }
+function fmtSeg(s){ var m=Math.floor(s/60), r=s%60; return '⏳ '+m+':'+(r<10?'0':'')+r; }
+
+function mostrarToast(texto, icono){
+  var t = document.getElementById('toastGlobal');
+  document.getElementById('toastGlobalTxt').textContent = texto;
+  t.querySelector('.ic').textContent = icono || '🎉';
+  t.classList.add('on');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){ t.classList.remove('on'); }, 4000);
+}
+
+function entrarSubasta(){
+  var nombre = document.getElementById('loginNombre').value.trim();
+  var contacto = document.getElementById('loginContacto').value.trim();
+  var msg = document.getElementById('loginMsg');
+  if(!nombre || nombre.length < 3){ msg.textContent='Escribe tu nombre completo.'; msg.classList.remove('oculto'); return; }
+  if(!contacto || contacto.length < 5){ msg.textContent='Escribe un teléfono o correo de contacto.'; msg.classList.remove('oculto'); return; }
+  msg.classList.add('oculto');
+  localStorage.setItem('subasta_nombre', nombre);
+  localStorage.setItem('subasta_contacto', contacto);
+  MI_NOMBRE = nombre; MI_CONTACTO = contacto; IDENTIFICADO = true;
+  document.getElementById('miNombreMostrado').textContent = nombre;
+  document.getElementById('identidadGuardada').classList.remove('oculto');
+  document.getElementById('pantallaLogin').classList.add('oculto');
+}
+
+function cambiarIdentidad(){
+  IDENTIFICADO = false;
+  document.getElementById('identidadGuardada').classList.add('oculto');
+  document.getElementById('loginNombre').value = MI_NOMBRE;
+  document.getElementById('loginContacto').value = MI_CONTACTO;
+  document.getElementById('pantallaLogin').classList.remove('oculto');
+}
 
 function iniciar(){
   if(TOKEN){
@@ -169,22 +267,33 @@ function iniciar(){
         document.getElementById('miNombreVerificado').textContent = r.nombre;
         document.getElementById('identidadVerificada').classList.remove('oculto');
       } else {
-        document.getElementById('identidad').classList.remove('oculto');
+        prepararLogin();
       }
       cargar();
     }).catch(function(){
-      document.getElementById('identidad').classList.remove('oculto');
+      prepararLogin();
       cargar();
     });
   } else {
-    document.getElementById('identidad').classList.remove('oculto');
+    prepararLogin();
     cargar();
+  }
+}
+
+function prepararLogin(){
+  var nombreGuardado = localStorage.getItem('subasta_nombre') || '';
+  var contactoGuardado = localStorage.getItem('subasta_contacto') || '';
+  if(nombreGuardado.length >= 3 && contactoGuardado.length >= 5){
+    MI_NOMBRE = nombreGuardado; MI_CONTACTO = contactoGuardado; IDENTIFICADO = true;
+    document.getElementById('miNombreMostrado').textContent = nombreGuardado;
+    document.getElementById('identidadGuardada').classList.remove('oculto');
+  } else {
+    document.getElementById('pantallaLogin').classList.remove('oculto');
   }
 }
 
 function cargar(){
   llamarApi('articulosSubasta', {}).then(function(r){
-    document.getElementById('cargando').classList.add('oculto');
     if(!r || !r.ok) return;
 
     document.documentElement.style.setProperty('--tinta', r.colorPrincipal);
@@ -192,7 +301,7 @@ function cargar(){
     if(r.fuenteGoogle && !document.getElementById('fnt')){
       var l = document.createElement('link');
       l.id='fnt'; l.rel='stylesheet';
-      l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(r.fuenteGoogle).replace(/%20/g,'+')+':wght@400;600;700&display=swap';
+      l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(r.fuenteGoogle).replace(/%20/g,'+')+':wght@400;600;700;800&display=swap';
       document.head.appendChild(l);
       document.documentElement.style.setProperty('--fuente', "'"+r.fuenteGoogle+"', sans-serif");
     }
@@ -210,10 +319,28 @@ function cargar(){
         : '🔒 Cobros y pagos procesados de forma segura';
     }
 
-    var anteriores = {};
-    ARTICULOS.forEach(function(a){ anteriores[a.articuloID] = a.pujaActual; });
-    ARTICULOS = r.articulos || [];
-    pintar(anteriores);
+    var nuevos = r.articulos || [];
+    var estructural = !primeraListaCargada || nuevos.length !== ARTICULOS.length;
+    if(!estructural){
+      nuevos.forEach(function(a){
+        if(prevImagen[a.articuloID] !== undefined && prevImagen[a.articuloID] !== a.urlImagen) estructural = true;
+        if(prevEstatus[a.articuloID] !== undefined && prevEstatus[a.articuloID] !== a.estatus) estructural = true;
+      });
+    }
+    nuevos.forEach(function(a){
+      prevMonto[a.articuloID] = a.pujaActual;
+      prevImagen[a.articuloID] = a.urlImagen;
+      prevEstatus[a.articuloID] = a.estatus;
+    });
+
+    document.getElementById('cargando').classList.add('oculto');
+    ARTICULOS = nuevos;
+    if(estructural){
+      pintar();
+      primeraListaCargada = true;
+    } else {
+      actualizarValores();
+    }
   }).catch(function(){
     document.getElementById('cargando').textContent = 'No pudimos cargar la subasta. Revisa tu conexión.';
   });
@@ -244,35 +371,55 @@ function cargarPatrocinadores(){
   }).catch(function(){});
 }
 
-function pintar(anteriores){
+function pintar(){
   var c = document.getElementById('lista');
   c.innerHTML = ARTICULOS.map(function(a){
     var cerrado = a.estatus !== 'ABIERTO';
-    var subioAhora = anteriores[a.articuloID] !== undefined && anteriores[a.articuloID] !== a.pujaActual;
     var foto = a.urlImagen ? 'background-image:url(\''+a.urlImagen+'\')' : '';
     var pillEstado = cerrado ? '<span class="pill pCerrado">Vendido</span>' : '<span class="pill pAbierto">Abierto</span>';
     var pillTiempo = (!cerrado && a.segundosRestantes > 0)
       ? ' <span class="pill pTiempo" id="t_'+a.articuloID+'" data-seg="'+a.segundosRestantes+'">'+fmtSeg(a.segundosRestantes)+'</span>' : '';
-    return '<div class="card '+(cerrado?'cerrado':'')+(subioAhora?' actualizado':'')+'">'+
-      '<div class="foto" style="'+foto+'"></div>'+
+    return '<div class="card '+(cerrado?'cerrado':'')+'" id="card_'+a.articuloID+'">'+
+      '<div class="foto" style="'+foto+'">'+
+        (cerrado ? '<div class="selloVendido"><div class="txt">🏆 VENDIDO</div></div>' : '')+
+      '</div>'+
       '<div class="info">'+
-        '<div class="nombreArt">'+a.nombre+' '+pillEstado+pillTiempo+'</div>'+
+        '<div class="cabezaArt"><span class="nombreArt">'+a.nombre+'</span>'+pillEstado+pillTiempo+'</div>'+
         (a.descripcion ? '<div class="descArt">'+a.descripcion+'</div>' : '')+
-        '<div class="pujaFila"><div class="pujaActual">'+a.pujaActualTexto+'</div>'+
-        '<div class="ganador">'+(a.ganadorNombre ? 'Va ganando: '+a.ganadorNombre+(a.ganadorVerificado?' ✓':'') : 'Sin pujas aún')+'</div></div>'+
+        '<div class="pujaBloque">'+
+          '<div class="pujaEtiqueta">Puja más alta</div>'+
+          '<div class="pujaActual" id="monto_'+a.articuloID+'">'+a.pujaActualTexto+'</div>'+
+          '<div class="ganador" id="gan_'+a.articuloID+'">'+
+            (a.ganadorNombre ? (cerrado?'Ganó: ':'Va ganando: ')+'<b>'+a.ganadorNombre+'</b>'+(a.ganadorVerificado?' ✓':'') : 'Sé el primero en pujar')+
+          '</div>'+
+        '</div>'+
         (cerrado ? '' :
           '<div class="fila">'+
-          '<input class="montoPuja" type="number" inputmode="decimal" id="monto_'+a.articuloID+'" '+
+          '<input class="montoPuja" type="number" inputmode="decimal" id="input_'+a.articuloID+'" '+
             'placeholder="Mín. '+a.siguienteMinima+'" value="'+a.siguienteMinima+'">'+
-          '<button onclick="pujar(\''+a.articuloID+'\')">Pujar</button>'+
           '</div>'+
-          '<div class="msgArt" id="msg_'+a.articuloID+'"></div>')+
+          '<button class="btnPujar" onclick="pujar(\''+a.articuloID+'\')">🔨 ¡Pujar ahora!</button>'+
+          '<div class="msgArt err oculto" id="msg_'+a.articuloID+'"></div>')+
       '</div>'+
     '</div>';
   }).join('');
 }
 
-function fmtSeg(s){ var m=Math.floor(s/60), r=s%60; return '⏳ '+m+':'+(r<10?'0':'')+r; }
+function actualizarValores(){
+  ARTICULOS.forEach(function(a){
+    var num = document.getElementById('monto_'+a.articuloID);
+    if(num && num.textContent !== a.pujaActualTexto){
+      num.textContent = a.pujaActualTexto;
+      num.classList.remove('pulso'); void num.offsetWidth; num.classList.add('pulso');
+    }
+    var gan = document.getElementById('gan_'+a.articuloID);
+    if(gan){
+      gan.innerHTML = a.ganadorNombre ? 'Va ganando: <b>'+a.ganadorNombre+'</b>'+(a.ganadorVerificado?' ✓':'') : 'Sé el primero en pujar';
+    }
+    var input = document.getElementById('input_'+a.articuloID);
+    if(input) input.placeholder = 'Mín. '+a.siguienteMinima;
+  });
+}
 
 setInterval(function(){
   document.querySelectorAll('[id^="t_"]').forEach(function(el){
@@ -289,28 +436,33 @@ function pujar(articuloID){
     nombre = document.getElementById('miNombreVerificado').textContent;
     contacto = ''; // el servidor la toma del pase cuando hay token
   } else {
-    nombre = document.getElementById('miNombre').value.trim();
-    contacto = document.getElementById('miContacto').value.trim();
+    nombre = MI_NOMBRE;
+    contacto = MI_CONTACTO;
   }
   var msg = document.getElementById('msg_'+articuloID);
-  msg.className = 'msgArt';
-  msg.textContent = '';
+  msg.className = 'msgArt err oculto';
 
-  if(!VERIFICADO){
-    if(!nombre || nombre.length < 3){ msg.className='msgArt err'; msg.textContent='Escribe tu nombre arriba.'; return; }
-    if(!contacto || contacto.length < 5){ msg.className='msgArt err'; msg.textContent='Escribe tu contacto arriba.'; return; }
+  if(!VERIFICADO && !IDENTIFICADO){
+    cambiarIdentidad();
+    return;
   }
 
-  var monto = Number(document.getElementById('monto_'+articuloID).value);
+  var input = document.getElementById('input_'+articuloID);
+  var monto = Number(input.value);
   if(!monto){ msg.className='msgArt err'; msg.textContent='Escribe un monto.'; return; }
+
+  var boton = document.querySelector('#card_'+articuloID+' .btnPujar');
+  if(boton) boton.disabled = true;
 
   llamarApi('registrarPuja', {articuloID: articuloID, nombre: nombre, contacto: contacto, monto: monto, token: TOKEN})
     .then(function(r){
+      if(boton) boton.disabled = false;
       if(!r.ok){ msg.className='msgArt err'; msg.textContent=r.mensaje; cargar(); return; }
-      msg.className='msgArt ok'; msg.textContent='¡Vas ganando este artículo!';
+      mostrarToast('¡Puja confirmada! 🎉', '🎉');
       cargar();
     })
     .catch(function(){
+      if(boton) boton.disabled = false;
       msg.className='msgArt err'; msg.textContent='No se pudo registrar tu puja. Intenta de nuevo.';
     });
 }
