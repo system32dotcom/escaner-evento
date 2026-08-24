@@ -124,6 +124,7 @@
 
   <div id="paso1" class="oculto">
     <div class="hero">
+      <img id="logo" class="oculto" style="max-height:40px;max-width:70%;object-fit:contain;margin-bottom:10px">
       <div class="evento" id="mEvento"></div>
       <h1 id="mCampana">Ayúdanos a lograrlo</h1>
       <div class="miniBarra"><div class="miniRelleno" id="miniRelleno"></div></div>
@@ -155,7 +156,7 @@
             <label>Tu correo (para tu confirmación)</label>
             <input id="email" type="email" placeholder="tu@correo.com" autocapitalize="off">
             <button class="cta" id="btnDonarTarjeta" style="background:var(--acento)">Ir a pagar con tarjeta</button>
-            <div class="confianza">🔒 Procesado de forma segura por Mercado Pago</div>
+            <div class="confianza" id="confianzaPago">🔒 Procesado de forma segura por Mercado Pago</div>
           </div>
         </div>
 
@@ -252,6 +253,13 @@ llamarApi('datosCampanaDonativos', {}).then(function(d){
       encodeURIComponent(d.fuenteGoogle).replace(/%20/g,'+') + ':wght@400;600;700&display=swap';
     document.head.appendChild(l);
     document.documentElement.style.setProperty('--fuente', "'" + d.fuenteGoogle + "', sans-serif");
+  }
+  if(d.urlLogo){
+    var logo = document.getElementById('logo');
+    logo.src = d.urlLogo; logo.classList.remove('oculto');
+  }
+  if(d.urlLogoMP){
+    document.getElementById('confianzaPago').innerHTML = '<img src="'+d.urlLogoMP+'" alt="Mercado Pago" style="height:20px">';
   }
   document.getElementById('mEvento').textContent = d.nombreEvento;
   document.getElementById('mCampana').textContent = d.nombreCampana || 'Ayúdanos a lograrlo';

@@ -180,6 +180,8 @@
           <b>El pago en efectivo no incluye mesa asignada.</b><br>
           Tu acceso será a lugares generales. Si quieres reservar mesa, elige tarjeta o transferencia.
         </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;
+          color:var(--suave);margin-top:14px" id="confianzaPago"></div>
       </div>
 
       <div class="card" id="cardUbicacion">
@@ -408,6 +410,10 @@ function iniciar(datos){
   }
   if(!datos.mpActivo){
     document.getElementById('optTarjeta').style.display='none';
+  } else {
+    document.getElementById('confianzaPago').innerHTML = datos.urlLogoMP
+      ? '<img src="'+datos.urlLogoMP+'" alt="Mercado Pago" style="height:20px">'
+      : '🔒 Pagos con tarjeta procesados de forma segura por Mercado Pago';
   }
   var metodosActivos = datos.metodosActivos || ['TARJETA','TRANSFERENCIA'];
   if(metodosActivos.indexOf('TRANSFERENCIA')<0) document.getElementById('optTransferencia').style.display='none';

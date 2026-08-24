@@ -69,6 +69,21 @@
     background:#7c2d12;color:#fed7aa;padding:13px 15px;border-radius:9px;font-size:13px;
     margin-bottom:14px;line-height:1.5
   }
+  .encabezado{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .encabezado img{max-height:34px;max-width:110px;object-fit:contain}
+  .confianzaPago{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;
+    color:var(--suave);margin:18px 0 6px}
+  .confianzaPago img{height:20px}
+  .carruselPatro{margin-top:26px;padding-top:18px;border-top:1px solid var(--linea);text-align:center}
+  .carruselPatro .t{font-size:11.5px;font-weight:700;color:var(--suave);text-transform:uppercase;
+    letter-spacing:.08em;margin-bottom:14px}
+  .patroSlide{display:none;flex-direction:column;align-items:center;gap:8px}
+  .patroSlide.on{display:flex}
+  .patroSlide img{max-height:64px;max-width:200px;object-fit:contain}
+  .patroSlide .nombre{font-size:12.5px;color:#334155;font-weight:600}
+  .patroDots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+  .patroDots .d{width:6px;height:6px;border-radius:50%;background:#cbd5e1}
+  .patroDots .d.on{background:var(--acento)}
 </style>
 </head>
 <body>
@@ -78,7 +93,7 @@
     &lt;script&gt;).
   </div>
 
-  <h1 id="tEvento">Subasta</h1>
+  <div class="encabezado"><img id="logo" class="oculto"><h1 id="tEvento">Subasta</h1></div>
   <div class="meta">Toca "Pujar" en cualquier artículo — tu puja se registra al instante.</div>
 
   <div id="avisoInactiva" class="aviso warn oculto">
@@ -100,6 +115,14 @@
 
   <div id="cargando" class="cargando">Cargando artículos…</div>
   <div id="lista"></div>
+
+  <div class="confianzaPago" id="confianzaPago"></div>
+
+  <div class="carruselPatro oculto" id="carruselPatro">
+    <div class="t">Con el apoyo de</div>
+    <div id="patroSlides"></div>
+    <div class="patroDots" id="patroDots"></div>
+  </div>
 </div>
 
 <script>
@@ -176,6 +199,17 @@ function cargar(){
     document.getElementById('tEvento').textContent = r.nombreEvento || 'Subasta';
     document.getElementById('avisoInactiva').classList.toggle('oculto', !!r.subastaActiva);
 
+    if(r.urlLogo){
+      var logo = document.getElementById('logo');
+      logo.src = r.urlLogo; logo.classList.remove('oculto');
+    }
+    if(!document.getElementById('confianzaPago').dataset.listo){
+      document.getElementById('confianzaPago').dataset.listo = '1';
+      document.getElementById('confianzaPago').innerHTML = r.urlLogoMP
+        ? '<img src="'+r.urlLogoMP+'" alt="Mercado Pago">'
+        : '🔒 Cobros y pagos procesados de forma segura';
+    }
+
     var anteriores = {};
     ARTICULOS.forEach(function(a){ anteriores[a.articuloID] = a.pujaActual; });
     ARTICULOS = r.articulos || [];
@@ -183,6 +217,31 @@ function cargar(){
   }).catch(function(){
     document.getElementById('cargando').textContent = 'No pudimos cargar la subasta. Revisa tu conexión.';
   });
+}
+
+// ---- Carrusel de patrocinadores (se carga una sola vez, no cambia cada sondeo) ----
+var patroIndice = 0;
+function cargarPatrocinadores(){
+  llamarApi('patrocinadores', {}).then(function(lista){
+    if(!lista || !lista.length) return;
+    document.getElementById('carruselPatro').classList.remove('oculto');
+    document.getElementById('patroSlides').innerHTML = lista.map(function(p, i){
+      return '<div class="patroSlide'+(i===0?' on':'')+'"><img src="'+p.urlImagen+'" alt="'+p.nombre+'">'+
+        '<div class="nombre">'+p.nombre+'</div></div>';
+    }).join('');
+    document.getElementById('patroDots').innerHTML = lista.map(function(_, i){
+      return '<div class="d'+(i===0?' on':'')+'"></div>';
+    }).join('');
+    if(lista.length > 1){
+      setInterval(function(){
+        var slides = document.querySelectorAll('.patroSlide');
+        var dots = document.querySelectorAll('.patroDots .d');
+        slides[patroIndice].classList.remove('on'); dots[patroIndice].classList.remove('on');
+        patroIndice = (patroIndice + 1) % slides.length;
+        slides[patroIndice].classList.add('on'); dots[patroIndice].classList.add('on');
+      }, 4000);
+    }
+  }).catch(function(){});
 }
 
 function pintar(anteriores){
@@ -257,6 +316,7 @@ function pujar(articuloID){
 }
 
 iniciar();
+cargarPatrocinadores();
 setInterval(cargar, 3500);
 </script>
 </body>
