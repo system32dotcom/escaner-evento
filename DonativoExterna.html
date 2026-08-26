@@ -273,8 +273,8 @@ llamarApi('datosCampanaDonativos', {}).then(function(d){
   if(metodos.indexOf('TRANSFERENCIA') < 0) document.getElementById('optTransferencia').classList.add('oculto');
   if(metodos.indexOf('EFECTIVO') < 0) document.getElementById('optEfectivo').classList.add('oculto');
 
-  var rapidos = [100, 200, 500, 1000, 2000, 5000];
-  var recomendado = 500;
+  var rapidos = [1000, 2000, 5000, 10000, 20000, 50000];
+  var recomendado = 5000;
   document.getElementById('montosRapidos').innerHTML = rapidos.map(function(m){
     var estrella = m===recomendado ? '<span class="estrella">★ MÁS ELEGIDO</span>' : '';
     return '<div class="montoBtn" data-monto="'+m+'">'+estrella+'$'+m.toLocaleString('es-MX')+'</div>';
