@@ -16,13 +16,9 @@
     padding:18px 14px 60px;
   }
   .wrap{max-width:640px;margin:0 auto}
-  h1{font-size:22px;letter-spacing:-.02em}
   .meta{color:var(--suave);font-size:13.5px;margin-bottom:16px;text-align:center}
-  .encabezado{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;
-    gap:8px;margin-bottom:4px}
-  .encabezado .lado{display:flex;align-items:center}
-  .encabezado img{max-height:34px;max-width:110px;object-fit:contain}
-  .encabezado h1{text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .encabezado{text-align:center;padding:18px 0 6px}
+  .encabezado img{max-height:40px;max-width:70%;object-fit:contain}
 
   input{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;
     font-size:15px;font-family:inherit;background:#fff;color:var(--tinta)}
@@ -144,27 +140,6 @@
     &lt;script&gt;).
   </div>
 
-  <div class="encabezado">
-    <div class="lado"><img id="logo" class="oculto"></div>
-    <h1 id="tEvento">Subasta</h1>
-    <div class="lado"></div>
-  </div>
-  <div class="meta">Toca "¡Pujar ahora!" en cualquier artículo — tu puja se registra al instante.</div>
-
-  <div id="avisoInactiva" class="aviso warn oculto">
-    La subasta todavía no está activa. Vuelve a intentarlo más tarde.
-  </div>
-
-  <div id="identidadVerificada" class="identidadVerificada oculto">
-    <span style="font-size:20px">✅</span>
-    <span>Estás pujando como <b id="miNombreVerificado"></b> — identidad verificada con tu pase.</span>
-  </div>
-
-  <div id="identidadGuardada" class="identidadGuardada oculto">
-    <span style="font-size:20px">🙋</span>
-    <span>Pujando como <b id="miNombreMostrado"></b> · <a href="javascript:void(0)" onclick="cambiarIdentidad()">cambiar</a></span>
-  </div>
-
   <div id="pantallaLogin" class="loginGate oculto">
     <div class="loginCard">
       <div class="loginIcon">🔨</div>
@@ -177,15 +152,34 @@
     </div>
   </div>
 
-  <div id="cargando" class="cargando">Cargando artículos…</div>
-  <div id="lista"></div>
+  <div id="appContenido" class="oculto">
+    <div class="encabezado"><img id="logo" class="oculto"></div>
+    <div class="meta">Toca "¡Pujar ahora!" en cualquier artículo — tu puja se registra al instante.</div>
 
-  <div class="confianzaPago" id="confianzaPago"></div>
+    <div id="avisoInactiva" class="aviso warn oculto">
+      La subasta todavía no está activa. Vuelve a intentarlo más tarde.
+    </div>
 
-  <div class="carruselPatro oculto" id="carruselPatro">
-    <div class="t">Con el apoyo de</div>
-    <div id="patroSlides"></div>
-    <div class="patroDots" id="patroDots"></div>
+    <div id="identidadVerificada" class="identidadVerificada oculto">
+      <span style="font-size:20px">✅</span>
+      <span>Estás pujando como <b id="miNombreVerificado"></b> — identidad verificada con tu pase.</span>
+    </div>
+
+    <div id="identidadGuardada" class="identidadGuardada oculto">
+      <span style="font-size:20px">🙋</span>
+      <span>Pujando como <b id="miNombreMostrado"></b> · <a href="javascript:void(0)" onclick="cambiarIdentidad()">cambiar</a></span>
+    </div>
+
+    <div id="cargando" class="cargando">Cargando artículos…</div>
+    <div id="lista"></div>
+
+    <div class="confianzaPago" id="confianzaPago"></div>
+
+    <div class="carruselPatro oculto" id="carruselPatro">
+      <div class="t">Con el apoyo de</div>
+      <div id="patroSlides"></div>
+      <div class="patroDots" id="patroDots"></div>
+    </div>
   </div>
 </div>
 
@@ -248,7 +242,7 @@ function entrarSubasta(){
   MI_NOMBRE = nombre; MI_CONTACTO = contacto; IDENTIFICADO = true;
   document.getElementById('miNombreMostrado').textContent = nombre;
   document.getElementById('identidadGuardada').classList.remove('oculto');
-  document.getElementById('pantallaLogin').classList.add('oculto');
+  mostrarApp();
 }
 
 function cambiarIdentidad(){
@@ -256,7 +250,16 @@ function cambiarIdentidad(){
   document.getElementById('identidadGuardada').classList.add('oculto');
   document.getElementById('loginNombre').value = MI_NOMBRE;
   document.getElementById('loginContacto').value = MI_CONTACTO;
+  mostrarLogin();
+}
+
+function mostrarLogin(){
   document.getElementById('pantallaLogin').classList.remove('oculto');
+  document.getElementById('appContenido').classList.add('oculto');
+}
+function mostrarApp(){
+  document.getElementById('pantallaLogin').classList.add('oculto');
+  document.getElementById('appContenido').classList.remove('oculto');
 }
 
 function iniciar(){
@@ -266,6 +269,7 @@ function iniciar(){
         VERIFICADO = true;
         document.getElementById('miNombreVerificado').textContent = r.nombre;
         document.getElementById('identidadVerificada').classList.remove('oculto');
+        mostrarApp();
       } else {
         prepararLogin();
       }
@@ -287,8 +291,9 @@ function prepararLogin(){
     MI_NOMBRE = nombreGuardado; MI_CONTACTO = contactoGuardado; IDENTIFICADO = true;
     document.getElementById('miNombreMostrado').textContent = nombreGuardado;
     document.getElementById('identidadGuardada').classList.remove('oculto');
+    mostrarApp();
   } else {
-    document.getElementById('pantallaLogin').classList.remove('oculto');
+    mostrarLogin();
   }
 }
 
@@ -305,7 +310,6 @@ function cargar(){
       document.head.appendChild(l);
       document.documentElement.style.setProperty('--fuente', "'"+r.fuenteGoogle+"', sans-serif");
     }
-    document.getElementById('tEvento').textContent = r.nombreEvento || 'Subasta';
     document.getElementById('avisoInactiva').classList.toggle('oculto', !!r.subastaActiva);
 
     if(r.urlLogo){
