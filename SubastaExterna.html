@@ -18,7 +18,10 @@
   .wrap{max-width:640px;margin:0 auto}
   .meta{color:var(--suave);font-size:13.5px;margin-bottom:16px;text-align:center}
   .encabezado{text-align:center;padding:18px 0 6px}
-  .encabezado img{max-height:40px;max-width:70%;object-fit:contain}
+  .logoBanner{display:none;background:#fff;border:1px solid var(--linea);border-radius:14px;
+    padding:10px 18px;margin:0 auto 10px;box-shadow:0 2px 10px rgba(15,23,42,.06)}
+  .logoBanner.on{display:inline-block}
+  .encabezado img{max-height:40px;max-width:70%;object-fit:contain;display:block}
 
   input{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;
     font-size:15px;font-family:inherit;background:#fff;color:var(--tinta)}
@@ -85,6 +88,13 @@
   .pAbierto{background:#dcfce7;color:#166534}
   .pCerrado{background:#f1f5f9;color:#64748b}
   .pTiempo{background:#fef3c7;color:#92400e}
+
+  .cuentaRegresivaCard{
+    text-align:center;font-weight:800;font-size:15px;color:#92400e;background:#fef3c7;
+    border:1px solid #fde68a;border-radius:10px;padding:9px;margin-bottom:12px;
+    animation:urgentePulso 1.1s ease-in-out infinite;font-variant-numeric:tabular-nums
+  }
+  @keyframes urgentePulso{0%,100%{transform:scale(1)} 50%{transform:scale(1.025)}}
 
   .pujaBloque{text-align:center;background:var(--fondo);border-radius:14px;padding:14px;margin-bottom:14px}
   .pujaEtiqueta{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--suave);font-weight:700}
@@ -153,7 +163,7 @@
   </div>
 
   <div id="appContenido" class="oculto">
-    <div class="encabezado"><img id="logo" class="oculto"></div>
+    <div class="encabezado"><div class="logoBanner" id="logoBanner"><img id="logo"></div></div>
     <div class="meta">Toca "¡Pujar ahora!" en cualquier artículo — tu puja se registra al instante.</div>
 
     <div id="avisoInactiva" class="aviso warn oculto">
@@ -219,7 +229,7 @@ var prevMonto = {}, prevImagen = {}, prevEstatus = {};
 var primeraListaCargada = false;
 
 function money(n){ return '$'+Number(n||0).toLocaleString('es-MX',{maximumFractionDigits:0}); }
-function fmtSeg(s){ var m=Math.floor(s/60), r=s%60; return '⏳ '+m+':'+(r<10?'0':'')+r; }
+function fmtSeg(s){ var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
 
 function mostrarToast(texto, icono){
   var t = document.getElementById('toastGlobal');
@@ -313,8 +323,8 @@ function cargar(){
     document.getElementById('avisoInactiva').classList.toggle('oculto', !!r.subastaActiva);
 
     if(r.urlLogo){
-      var logo = document.getElementById('logo');
-      logo.src = r.urlLogo; logo.classList.remove('oculto');
+      document.getElementById('logo').src = r.urlLogo;
+      document.getElementById('logoBanner').classList.add('on');
     }
     if(!document.getElementById('confianzaPago').dataset.listo){
       document.getElementById('confianzaPago').dataset.listo = '1';
@@ -381,15 +391,17 @@ function pintar(){
     var cerrado = a.estatus !== 'ABIERTO';
     var foto = a.urlImagen ? 'background-image:url(\''+a.urlImagen+'\')' : '';
     var pillEstado = cerrado ? '<span class="pill pCerrado">Vendido</span>' : '<span class="pill pAbierto">Abierto</span>';
-    var pillTiempo = (!cerrado && a.segundosRestantes > 0)
-      ? ' <span class="pill pTiempo" id="t_'+a.articuloID+'" data-seg="'+a.segundosRestantes+'">'+fmtSeg(a.segundosRestantes)+'</span>' : '';
+    var cuentaRegresiva = (!cerrado && a.segundosRestantes > 0)
+      ? '<div class="cuentaRegresivaCard" id="t_'+a.articuloID+'" data-seg="'+a.segundosRestantes+'">⏳ Cierra en <span>'+fmtSeg(a.segundosRestantes)+'</span></div>'
+      : '';
     return '<div class="card '+(cerrado?'cerrado':'')+'" id="card_'+a.articuloID+'">'+
       '<div class="foto" style="'+foto+'">'+
         (cerrado ? '<div class="selloVendido"><div class="txt">🏆 VENDIDO</div></div>' : '')+
       '</div>'+
       '<div class="info">'+
-        '<div class="cabezaArt"><span class="nombreArt">'+a.nombre+'</span>'+pillEstado+pillTiempo+'</div>'+
+        '<div class="cabezaArt"><span class="nombreArt">'+a.nombre+'</span>'+pillEstado+'</div>'+
         (a.descripcion ? '<div class="descArt">'+a.descripcion+'</div>' : '')+
+        cuentaRegresiva+
         '<div class="pujaBloque">'+
           '<div class="pujaEtiqueta">Puja más alta</div>'+
           '<div class="pujaActual" id="monto_'+a.articuloID+'">'+a.pujaActualTexto+'</div>'+
@@ -430,7 +442,7 @@ setInterval(function(){
     var seg = Number(el.dataset.seg) - 1;
     if(seg <= 0){ cargar(); return; }
     el.dataset.seg = seg;
-    el.textContent = fmtSeg(seg);
+    el.querySelector('span').textContent = fmtSeg(seg);
   });
 }, 1000);
 

@@ -148,7 +148,7 @@
         <div class="metodos">
           <button type="button" class="btnTarjeta oculto" id="optTarjeta">💳 Donar con tarjeta — rápido y seguro</button>
           <button type="button" class="btnSecundario" id="optTransferencia">🏦 Transferencia bancaria</button>
-          <button type="button" class="btnSecundario" id="optEfectivo">💵 Efectivo en el evento</button>
+          <button type="button" class="btnSecundario" id="optEfectivo">💳💵 Efectivo o Tarjeta en el evento</button>
         </div>
 
         <div class="panelDesplegable" id="panelTarjeta">
@@ -165,10 +165,9 @@
             <div class="copiable"><span id="pvClabe"></span><button onclick="copiar('pvClabe',this)">Copiar</button></div>
             <div class="dato"><span>Banco</span><span id="pvBanco"></span></div>
             <div class="dato"><span>Beneficiario</span><span id="pvBenef"></span></div>
-            <div class="aviso warn" style="margin:12px 0 0">
-              Al confirmar abajo te damos un código para el concepto de tu transferencia.
-            </div>
-            <button class="cta" id="btnDonarTransferencia">Confirmar donativo</button>
+            <p style="font-size:13px;color:#334155;margin:12px 0 0">Código para el concepto:</p>
+            <div class="copiable"><span id="pvCodigo">Generando…</span><button onclick="copiar('pvCodigo',this)">Copiar</button></div>
+            <button class="cta" id="btnDonarTransferencia" disabled>Ya realicé mi transferencia</button>
           </div>
         </div>
 
@@ -192,14 +191,10 @@
     <div class="card">
       <div class="graciasHero"><div class="emoji">🙏</div><h1>¡Gracias!</h1>
         <p style="color:#64748b;font-size:14px">Tu donativo quedó registrado.</p></div>
-      <div class="aviso ok" style="margin-top:6px">Completa tu transferencia con los datos de arriba.</div>
-      <p style="font-size:13.5px;color:#334155;margin-bottom:8px">Agrega este código en el concepto:</p>
+      <div class="aviso ok" style="margin-top:6px">Anotado. En cuanto confirmemos tu transferencia, verás tu aporte reflejado en la meta. ¡Gracias!</div>
+      <p style="font-size:13.5px;color:#334155;margin-bottom:8px">Tu código de referencia:</p>
       <div class="copiable"><span id="trCodigo" style="font-size:19px;font-weight:700"></span>
         <button onclick="copiar('trCodigo',this)">Copiar</button></div>
-      <button class="cta" id="btnYaTransferi">Ya hice mi transferencia</button>
-      <div id="okComprobante" class="aviso ok oculto" style="margin-top:12px">
-        Anotado. En cuanto confirmemos tu depósito, verás tu aporte reflejado en la meta. ¡Gracias!
-      </div>
     </div>
   </div>
 
@@ -333,7 +328,24 @@ document.getElementById('optTransferencia').onclick = function(){
   estado.metodo = 'TRANSFERENCIA';
   var yaAbierto = this.classList.contains('abierto');
   cerrarPaneles();
-  if(!yaAbierto){ this.classList.add('abierto'); document.getElementById('panelTransferencia').classList.add('abierto'); }
+  if(yaAbierto) return;
+  this.classList.add('abierto');
+  document.getElementById('panelTransferencia').classList.add('abierto');
+  if(estado.donativoID && estado.metodoCreado === 'TRANSFERENCIA') return; // ya se generaron sus datos, no duplicar
+  var btn = document.getElementById('btnDonarTransferencia');
+  btn.disabled = true;
+  document.getElementById('pvCodigo').textContent = 'Generando…';
+  var datos = Object.assign(datosBase(), { email: '', metodoPago: 'TRANSFERENCIA' });
+  llamarApi('crearDonativo', {datos: JSON.stringify(datos)}).then(function(r){
+    if(!r.ok){ mostrarError(r.mensaje || 'No se pudo generar tus datos de transferencia.'); cerrarPaneles(); return; }
+    estado.donativoID = r.donativoID;
+    estado.metodoCreado = 'TRANSFERENCIA';
+    document.getElementById('pvCodigo').textContent = r.datos.codigo;
+    btn.disabled = false;
+  }).catch(function(){
+    mostrarError('Ocurrió un error al generar tus datos de transferencia. Intenta de nuevo.');
+    cerrarPaneles();
+  });
 };
 document.getElementById('optEfectivo').onclick = function(){
   if(!validarAntesDeMetodo()) return;
@@ -377,8 +389,18 @@ document.getElementById('btnDonarTarjeta').onclick = function(){
   enviarDonativo(datos, this, 'Ir a pagar con tarjeta');
 };
 document.getElementById('btnDonarTransferencia').onclick = function(){
-  var datos = Object.assign(datosBase(), { email: '', metodoPago: 'TRANSFERENCIA' });
-  enviarDonativo(datos, this, 'Confirmar donativo');
+  if(!estado.donativoID){ return; } // aún generando sus datos
+  var b = this;
+  b.disabled = true; b.textContent = 'Registrando...';
+  llamarApi('transferenciaRealizada', {donativoID: estado.donativoID}).then(function(){
+    document.getElementById('trCodigo').textContent = document.getElementById('pvCodigo').textContent;
+    document.getElementById('paso1').classList.add('oculto');
+    document.getElementById('resTransferencia').classList.remove('oculto');
+    window.scrollTo(0,0);
+  }).catch(function(){
+    b.disabled = false; b.textContent = 'Ya realicé mi transferencia';
+    mostrarError('No se pudo registrar. Intenta de nuevo.');
+  });
 };
 document.getElementById('btnDonarEfectivo').onclick = function(){
   var datos = Object.assign(datosBase(), { email: '', metodoPago: 'EFECTIVO' });
@@ -400,7 +422,6 @@ function manejar(r){
   if(!r.ok){ return mostrarError(r.mensaje || 'No se pudo procesar tu donativo.'); }
   estado.donativoID = r.donativoID;
   if(r.siguiente === 'REDIRIGIR'){ window.location.href = r.url; return; }
-  if(r.siguiente === 'TRANSFERENCIA') return vistaTransferencia(r);
   if(r.siguiente === 'EFECTIVO') return vistaEfectivo(r);
   if(r.siguiente === 'ALTERNATIVAS'){
     document.getElementById('paso1').classList.add('oculto');
@@ -409,29 +430,12 @@ function manejar(r){
   }
 }
 
-function vistaTransferencia(r){
-  document.getElementById('paso1').classList.add('oculto');
-  document.getElementById('resTransferencia').classList.remove('oculto');
-  document.getElementById('trCodigo').textContent = r.datos.codigo;
-  window.scrollTo(0,0);
-}
 function vistaEfectivo(r){
   document.getElementById('paso1').classList.add('oculto');
   document.getElementById('resEfectivo').classList.remove('oculto');
   document.getElementById('msgEfectivoFinal').textContent = r.mensaje;
   window.scrollTo(0,0);
 }
-
-document.getElementById('btnYaTransferi').onclick = function(){
-  var b = this;
-  b.disabled = true; b.textContent = 'Registrando...';
-  llamarApi('transferenciaRealizada', {donativoID: estado.donativoID}).then(function(){
-    b.classList.add('oculto');
-    document.getElementById('okComprobante').classList.remove('oculto');
-  }).catch(function(){
-    b.disabled = false; b.textContent = 'Ya hice mi transferencia';
-  });
-};
 
 function copiar(id, btn){
   var t = document.getElementById(id).textContent;
