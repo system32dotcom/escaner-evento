@@ -83,6 +83,8 @@
   .info{padding:16px 18px 20px}
   .cabezaArt{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px}
   .nombreArt{font-weight:800;font-size:18.5px;letter-spacing:-.01em}
+  .autorArt{font-size:12.5px;color:var(--suave);margin-top:2px}
+  .autorArt .redArt{opacity:.75;margin-left:4px}
   .descArt{font-size:13px;color:var(--suave);margin:4px 0 12px}
   .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700}
   .pAbierto{background:#dcfce7;color:#166534}
@@ -400,6 +402,7 @@ function pintar(){
       '</div>'+
       '<div class="info">'+
         '<div class="cabezaArt"><span class="nombreArt">'+a.nombre+'</span>'+pillEstado+'</div>'+
+        (a.autor ? '<div class="autorArt">Por '+a.autor+(a.redSocial ? ' <span class="redArt">'+a.redSocial+'</span>' : '')+'</div>' : '')+
         (a.descripcion ? '<div class="descArt">'+a.descripcion+'</div>' : '')+
         cuentaRegresiva+
         '<div class="pujaBloque">'+
