@@ -50,13 +50,19 @@
   .panelInterno{padding:14px 2px 4px}
   .copiable{
     background:#f1f5f9;padding:11px 13px;border-radius:8px;font-family:ui-monospace,Menlo,monospace;
-    font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:7px 0;
+    font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 0 16px;
     word-break:break-all
   }
   .copiable button{background:var(--tinta);color:#fff;border:0;border-radius:6px;padding:6px 11px;
     font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
-  .dato{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:14px}
-  .dato span:last-child{font-weight:650}
+  .datoApilado{text-align:center;margin-bottom:14px}
+  .datoApilado .etiqueta{font-size:11.5px;font-weight:700;color:var(--suave);text-transform:uppercase;letter-spacing:.05em}
+  .datoApilado .valor{font-size:15.5px;font-weight:700;margin-top:3px}
+  .btnConfirmar{
+    width:100%;padding:14px;border:0;border-radius:10px;background:var(--acento);color:#fff;
+    font-size:15px;font-weight:700;cursor:pointer;font-family:inherit
+  }
+  .btnConfirmar:disabled{background:#94a3b8;cursor:not-allowed}
 
   .ticker{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;margin:4px 0 18px}
   .chipDonante{
@@ -105,12 +111,23 @@
 
         <div class="panelDesplegable" id="panelTransferencia">
           <div class="panelInterno">
+            <div class="datoApilado"><div class="etiqueta">CLABE</div></div>
             <div class="copiable"><span id="pvClabe"></span><button onclick="copiar('pvClabe',this)">Copiar</button></div>
-            <div class="dato"><span>Banco</span><span id="pvBanco"></span></div>
-            <div class="dato"><span>Beneficiario</span><span id="pvBenef"></span></div>
-            <p style="font-size:13px;color:#334155;margin:12px 0 0">Concepto:</p>
-            <div class="copiable"><span id="pvConcepto"></span><button onclick="copiar('pvConcepto',this)">Copiar</button></div>
-            <div class="aviso ok">Realiza tu transferencia y acércate al staff de donación para confirmarla.</div>
+
+            <div class="datoApilado">
+              <div class="etiqueta">Banco</div>
+              <div class="valor" id="pvBanco"></div>
+            </div>
+            <div class="datoApilado">
+              <div class="etiqueta">Beneficiario</div>
+              <div class="valor" id="pvBenef"></div>
+            </div>
+
+            <div class="datoApilado"><div class="etiqueta">Concepto</div></div>
+            <div class="copiable"><span id="pvConcepto">Generando…</span><button onclick="copiar('pvConcepto',this)">Copiar</button></div>
+
+            <button class="btnConfirmar" id="btnDonarTransferencia" disabled>Confirmar transferencia</button>
+            <div class="aviso ok" id="avisoTransferencia">Después de realizar tu transferencia, vuelve para confirmarla, o hazlo directamente con el staff de donación.</div>
           </div>
         </div>
 
@@ -170,7 +187,6 @@ llamarApi('datosCampanaDonativos', {}).then(function(d){
   document.getElementById('pvClabe').textContent = d.clabe;
   document.getElementById('pvBanco').textContent = d.banco;
   document.getElementById('pvBenef').textContent = d.beneficiario;
-  document.getElementById('pvConcepto').textContent = d.conceptoDonativo;
   document.getElementById('mensajeEfectivoPreview').textContent = d.mensajeEfectivo;
 
   var metodos = d.metodosActivos || [];
@@ -198,7 +214,13 @@ function cargarProgreso(){
 
 function money(n){ return '$'+Number(n||0).toLocaleString('es-MX',{maximumFractionDigits:0}); }
 
-// ---- Acordeones de método (solo informativos — no crean ningún registro) ----
+// ---- Acordeones de método ----
+// Efectivo es solo informativo. Transferencia sí reserva, al abrirse, un
+// código de concepto único e irrepetible (un donativo PENDIENTE sin nombre
+// ni monto) — así el staff puede identificar cada transferencia en el banco
+// y, al conciliarla desde el panel de Administración, capturar el monto real.
+var donativoTransferenciaID = null;
+
 function cerrarPaneles(){
   ['panelTransferencia','panelEfectivo'].forEach(function(id){
     document.getElementById(id).classList.remove('abierto');
@@ -210,12 +232,37 @@ function cerrarPaneles(){
 document.getElementById('optTransferencia').onclick = function(){
   var yaAbierto = this.classList.contains('abierto');
   cerrarPaneles();
-  if(!yaAbierto){ this.classList.add('abierto'); document.getElementById('panelTransferencia').classList.add('abierto'); }
+  if(yaAbierto) return;
+  this.classList.add('abierto');
+  document.getElementById('panelTransferencia').classList.add('abierto');
+  if(donativoTransferenciaID) return; // ya se generó su código en esta sesión, no duplicar
+  document.getElementById('pvConcepto').textContent = 'Generando…';
+  llamarApi('iniciarDonativoTransferencia', {}).then(function(r){
+    if(!r.ok){ document.getElementById('pvConcepto').textContent = 'No se pudo generar'; return; }
+    donativoTransferenciaID = r.donativoID;
+    document.getElementById('pvConcepto').textContent = r.datos.codigo;
+    document.getElementById('btnDonarTransferencia').disabled = false;
+  }).catch(function(){
+    document.getElementById('pvConcepto').textContent = 'No se pudo generar';
+  });
 };
 document.getElementById('optEfectivo').onclick = function(){
   var yaAbierto = this.classList.contains('abierto');
   cerrarPaneles();
   if(!yaAbierto){ this.classList.add('abierto'); document.getElementById('panelEfectivo').classList.add('abierto'); }
+};
+
+document.getElementById('btnDonarTransferencia').onclick = function(){
+  if(!donativoTransferenciaID) return;
+  var btn = this;
+  btn.disabled = true; btn.textContent = 'Registrando...';
+  llamarApi('transferenciaRealizada', {donativoID: donativoTransferenciaID}).then(function(){
+    btn.textContent = '✓ Transferencia confirmada';
+    document.getElementById('avisoTransferencia').textContent =
+      'Anotado. En cuanto confirmemos el monto, verás tu aporte reflejado en la meta. ¡Gracias!';
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = 'Confirmar transferencia';
+  });
 };
 
 function copiar(id, btn){
