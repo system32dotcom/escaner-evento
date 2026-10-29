@@ -215,11 +215,20 @@ function cargarProgreso(){
 function money(n){ return '$'+Number(n||0).toLocaleString('es-MX',{maximumFractionDigits:0}); }
 
 // ---- Acordeones de método ----
-// Efectivo es solo informativo. Transferencia sí reserva, al abrirse, un
-// código de concepto único e irrepetible (un donativo PENDIENTE sin nombre
-// ni monto) — así el staff puede identificar cada transferencia en el banco
-// y, al conciliarla desde el panel de Administración, capturar el monto real.
+// Efectivo es solo informativo. Transferencia muestra un código de concepto
+// generado AQUÍ MISMO en el navegador (no en el servidor) en cuanto se abre
+// el panel — por seguridad, el donativo como tal (el registro en la hoja)
+// solo se crea hasta que la persona de verdad confirma que ya transfirió, no
+// antes, para no llenar la base de datos de intentos que nunca se completaron.
+var codigoTransferencia = null;
 var donativoTransferenciaID = null;
+
+function generarCodigoTransferencia(){
+  var letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin 0/O ni 1/I para que no se confundan al copiarlo a mano
+  var s = '';
+  for(var i=0; i<6; i++) s += letras.charAt(Math.floor(Math.random()*letras.length));
+  return s;
+}
 
 function cerrarPaneles(){
   ['panelTransferencia','panelEfectivo'].forEach(function(id){
@@ -235,16 +244,11 @@ document.getElementById('optTransferencia').onclick = function(){
   if(yaAbierto) return;
   this.classList.add('abierto');
   document.getElementById('panelTransferencia').classList.add('abierto');
-  if(donativoTransferenciaID) return; // ya se generó su código en esta sesión, no duplicar
-  document.getElementById('pvConcepto').textContent = 'Generando…';
-  llamarApi('iniciarDonativoTransferencia', {}).then(function(r){
-    if(!r.ok){ document.getElementById('pvConcepto').textContent = 'No se pudo generar'; return; }
-    donativoTransferenciaID = r.donativoID;
-    document.getElementById('pvConcepto').textContent = r.datos.codigo;
+  if(!codigoTransferencia){
+    codigoTransferencia = generarCodigoTransferencia();
+    document.getElementById('pvConcepto').textContent = codigoTransferencia;
     document.getElementById('btnDonarTransferencia').disabled = false;
-  }).catch(function(){
-    document.getElementById('pvConcepto').textContent = 'No se pudo generar';
-  });
+  }
 };
 document.getElementById('optEfectivo').onclick = function(){
   var yaAbierto = this.classList.contains('abierto');
@@ -253,10 +257,12 @@ document.getElementById('optEfectivo').onclick = function(){
 };
 
 document.getElementById('btnDonarTransferencia').onclick = function(){
-  if(!donativoTransferenciaID) return;
+  if(!codigoTransferencia || donativoTransferenciaID) return; // ya confirmado, no duplicar
   var btn = this;
   btn.disabled = true; btn.textContent = 'Registrando...';
-  llamarApi('transferenciaRealizada', {donativoID: donativoTransferenciaID}).then(function(){
+  llamarApi('confirmarDonativoTransferencia', {codigo: codigoTransferencia}).then(function(r){
+    if(!r.ok){ btn.disabled = false; btn.textContent = 'Confirmar transferencia'; return; }
+    donativoTransferenciaID = r.donativoID;
     btn.textContent = '✓ Transferencia confirmada';
     document.getElementById('avisoTransferencia').textContent =
       'Anotado. En cuanto confirmemos el monto, verás tu aporte reflejado en la meta. ¡Gracias!';
