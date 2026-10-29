@@ -34,32 +34,9 @@
   .miniTexto b{font-weight:700}
 
   .card{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:20px;margin-bottom:14px}
-  label{display:block;font-size:13px;font-weight:600;margin:0 0 6px;color:#334155}
-  input,textarea{
-    width:100%;padding:12px 13px;border:1px solid #cbd5e1;border-radius:9px;
-    font-size:16px;font-family:inherit;background:#fff;color:var(--tinta)
-  }
-  input:focus{outline:2px solid var(--acento);outline-offset:-1px;border-color:transparent}
+  label{display:block;font-size:13px;font-weight:600;margin:0 0 10px;color:#334155}
 
-  .montos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:2px}
-  .montoBtn{
-    position:relative;border:1.5px solid #cbd5e1;border-radius:10px;padding:13px 6px;text-align:center;
-    cursor:pointer;font-weight:700;font-size:15px;background:#fff
-  }
-  .montoBtn.sel{border-color:var(--acento);background:#f0fdf4;color:#166534}
-  .montoBtn .estrella{
-    position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--alerta);color:#fff;
-    font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:20px;letter-spacing:.03em;white-space:nowrap
-  }
-  .otroMonto{margin-top:10px}
-
-  .metodos{display:flex;flex-direction:column;gap:10px;margin-top:4px}
-  .btnTarjeta{
-    width:100%;padding:17px;border:0;border-radius:12px;font-size:16.5px;font-weight:750;cursor:pointer;
-    font-family:inherit;color:#fff;background:linear-gradient(135deg,var(--acento),var(--acento2));
-    box-shadow:0 8px 20px -6px color-mix(in srgb, var(--acento) 60%, transparent);
-    display:flex;align-items:center;justify-content:center;gap:9px
-  }
+  .metodos{display:flex;flex-direction:column;gap:10px}
   .btnSecundario{
     width:100%;padding:13px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14.5px;font-weight:650;
     cursor:pointer;font-family:inherit;background:#fff;color:var(--tinta);
@@ -81,36 +58,17 @@
   .dato{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:14px}
   .dato span:last-child{font-weight:650}
 
-  button.cta{
-    width:100%;padding:14px;background:var(--tinta);color:#fff;border:0;border-radius:10px;
-    font-size:15.5px;font-weight:650;cursor:pointer;font-family:inherit;margin-top:14px
-  }
-  button.cta:disabled{background:#94a3b8;cursor:not-allowed}
-
-  .confianza{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--suave);margin-top:12px}
-  .anonimo{font-size:12.5px;color:var(--suave);text-align:center;margin-top:10px;cursor:pointer;
-    text-decoration:underline;text-decoration-style:dotted}
-  .chkAnonimoBox{display:none;align-items:center;justify-content:center;gap:7px;margin-top:8px;font-size:13px;color:#334155}
-  .chkAnonimoBox.on{display:flex}
-  .chkAnonimoBox input{width:auto}
-
   .ticker{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;margin-top:4px}
   .chipDonante{
     background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;border-radius:999px;padding:6px 13px;
     font-size:12px;white-space:nowrap;flex-shrink:0
   }
 
-  .aviso{padding:13px 15px;border-radius:9px;font-size:13.5px;margin:14px 0;line-height:1.5}
-  .aviso.warn{background:#fffbeb;color:#92400e;border-left:3px solid var(--alerta)}
-  .aviso.err{background:#fef2f2;color:#991b1b;border-left:3px solid var(--error)}
+  .aviso{padding:13px 15px;border-radius:9px;font-size:13.5px;margin:14px 0 0;line-height:1.5}
   .aviso.ok{background:#f0fdf4;color:#166534;border-left:3px solid var(--acento)}
   .aviso.info{background:#eff6ff;color:#1e40af;border-left:3px solid #3b82f6;white-space:pre-line}
   .oculto{display:none}
   .cargando{text-align:center;padding:60px 20px;color:var(--suave)}
-
-  .graciasHero{text-align:center;padding:10px 0 4px}
-  .graciasHero .emoji{font-size:52px;margin-bottom:6px}
-  .graciasHero h1{font-size:23px;margin-bottom:6px}
   .avisoConfig{
     background:#7c2d12;color:#fed7aa;padding:13px 15px;border-radius:9px;font-size:13px;
     margin:14px 16px 0;line-height:1.5
@@ -139,29 +97,10 @@
       <div id="ticker" class="ticker"></div>
 
       <div class="card">
-        <label>Tu nombre</label>
-        <input id="nombre" type="text" placeholder="¿Cómo te llamas?" autocapitalize="words">
-
-        <label style="margin-top:16px">¿Cuánto quieres donar?</label>
-        <div class="montos" id="montosRapidos"></div>
-        <input class="otroMonto" id="montoLibre" type="number" inputmode="decimal" placeholder="Otra cantidad">
-      </div>
-
-      <div class="card">
-        <label style="margin-bottom:10px">Elige cómo donar</label>
+        <label>Elige cómo donar</label>
         <div class="metodos">
-          <button type="button" class="btnTarjeta oculto" id="optTarjeta">💳 Donar con tarjeta — rápido y seguro</button>
           <button type="button" class="btnSecundario" id="optTransferencia">🏦 Transferencia bancaria</button>
           <button type="button" class="btnSecundario" id="optEfectivo">💳💵 Efectivo o Tarjeta en el evento</button>
-        </div>
-
-        <div class="panelDesplegable" id="panelTarjeta">
-          <div class="panelInterno">
-            <label>Tu correo (para tu confirmación)</label>
-            <input id="email" type="email" placeholder="tu@correo.com" autocapitalize="off">
-            <button class="cta" id="btnDonarTarjeta" style="background:var(--acento)">Ir a pagar con tarjeta</button>
-            <div class="confianza" id="confianzaPago">🔒 Procesado de forma segura por Mercado Pago</div>
-          </div>
         </div>
 
         <div class="panelDesplegable" id="panelTransferencia">
@@ -169,47 +108,16 @@
             <div class="copiable"><span id="pvClabe"></span><button onclick="copiar('pvClabe',this)">Copiar</button></div>
             <div class="dato"><span>Banco</span><span id="pvBanco"></span></div>
             <div class="dato"><span>Beneficiario</span><span id="pvBenef"></span></div>
-            <p style="font-size:13px;color:#334155;margin:12px 0 0">Código para el concepto:</p>
-            <div class="copiable"><span id="pvCodigo">Generando…</span><button onclick="copiar('pvCodigo',this)">Copiar</button></div>
-            <button class="cta" id="btnDonarTransferencia" disabled>Ya realicé mi transferencia</button>
+            <div class="aviso ok">Realiza tu transferencia y vuelve para confirmarla o acércate al staff de donación para confirmarla.</div>
           </div>
         </div>
 
         <div class="panelDesplegable" id="panelEfectivo">
           <div class="panelInterno">
             <div class="aviso info" id="mensajeEfectivoPreview"></div>
-            <button class="cta" id="btnDonarEfectivo">Confirmar donativo</button>
           </div>
         </div>
-
-        <div id="errorForm" class="aviso err oculto"></div>
-        <div class="anonimo" id="toggleAnonimo">Prefiero donar de forma anónima</div>
-        <div class="chkAnonimoBox" id="cajaAnonimo">
-          <input type="checkbox" id="chkAnonimo"><span>No mostrar mi nombre en pantalla</span>
-        </div>
       </div>
-    </div>
-  </div>
-
-  <div id="resTransferencia" class="wrap oculto">
-    <div class="card">
-      <div class="graciasHero"><div class="emoji">🙏</div><h1>¡Gracias!</h1>
-        <p style="color:#64748b;font-size:14px">Tu donativo quedó registrado.</p></div>
-      <div class="aviso ok" style="margin-top:6px">Anotado. En cuanto confirmemos tu transferencia, verás tu aporte reflejado en la meta. ¡Gracias!</div>
-    </div>
-  </div>
-
-  <div id="resEfectivo" class="wrap oculto">
-    <div class="card">
-      <div class="graciasHero"><div class="emoji">🙏</div><h1>¡Gracias!</h1>
-        <p style="color:#64748b;font-size:14px">Tu donativo quedó registrado.</p></div>
-    </div>
-  </div>
-
-  <div id="resAlternativas" class="wrap oculto">
-    <div class="card">
-      <div class="aviso err" id="msgAlternativas"></div>
-      <button class="cta" onclick="location.reload()">Intentar de nuevo</button>
     </div>
   </div>
 
@@ -221,6 +129,9 @@ if (!API_URL || API_URL.indexOf('PEGA_AQUI') >= 0) {
   document.getElementById('avisoConfig').classList.remove('oculto');
 }
 
+/* Vive fuera de Apps Script (GitHub Pages) por el mismo motivo que ReservaExterna.html y
+   ScannerExterno.html: Safari/iOS no puede abrir apps web completas de Apps Script. GET,
+   no POST — un POST pierde su cuerpo al seguir la redirección 302 de las apps web. */
 function llamarApi(accion, datos){
   var payload = Object.assign({p: 'apiPublica', accion: accion}, datos || {});
   var qs = Object.keys(payload).map(function(k){
@@ -236,7 +147,6 @@ function llamarApi(accion, datos){
 }
 
 var EV = null;
-var estado = { donativoID: null, metodo: null, monto: 0 };
 
 llamarApi('datosCampanaDonativos', {}).then(function(d){
   EV = d;
@@ -253,9 +163,6 @@ llamarApi('datosCampanaDonativos', {}).then(function(d){
     document.getElementById('logo').src = d.urlLogo;
     document.getElementById('logoBanner').classList.add('on');
   }
-  if(d.urlLogoMP){
-    document.getElementById('confianzaPago').innerHTML = '<img src="'+d.urlLogoMP+'" alt="Mercado Pago" style="height:20px">';
-  }
   document.getElementById('mEvento').textContent = d.nombreEvento;
   document.getElementById('mCampana').textContent = d.nombreCampana || 'Ayúdanos a lograrlo';
   document.getElementById('pvClabe').textContent = d.clabe;
@@ -264,34 +171,14 @@ llamarApi('datosCampanaDonativos', {}).then(function(d){
   document.getElementById('mensajeEfectivoPreview').textContent = d.mensajeEfectivo;
 
   var metodos = d.metodosActivos || [];
-  if(metodos.indexOf('TARJETA') >= 0 && d.mpActivo) document.getElementById('optTarjeta').classList.remove('oculto');
   if(metodos.indexOf('TRANSFERENCIA') < 0) document.getElementById('optTransferencia').classList.add('oculto');
   if(metodos.indexOf('EFECTIVO') < 0) document.getElementById('optEfectivo').classList.add('oculto');
-
-  var rapidos = [1000, 2000, 5000, 10000, 20000, 50000];
-  var recomendado = 5000;
-  document.getElementById('montosRapidos').innerHTML = rapidos.map(function(m){
-    var estrella = m===recomendado ? '<span class="estrella">★ MÁS ELEGIDO</span>' : '';
-    return '<div class="montoBtn" data-monto="'+m+'">'+estrella+'$'+m.toLocaleString('es-MX')+'</div>';
-  }).join('');
-  document.querySelectorAll('.montoBtn').forEach(function(b){
-    b.onclick = function(){
-      document.querySelectorAll('.montoBtn').forEach(function(x){x.classList.remove('sel')});
-      this.classList.add('sel');
-      document.getElementById('montoLibre').value = '';
-      estado.monto = Number(this.dataset.monto);
-    };
-  });
-  document.getElementById('montoLibre').addEventListener('input', function(){
-    document.querySelectorAll('.montoBtn').forEach(function(x){x.classList.remove('sel')});
-    estado.monto = Number(this.value) || 0;
-  });
 
   cargarProgreso();
   document.getElementById('cargando').classList.add('oculto');
   document.getElementById('paso1').classList.remove('oculto');
 }).catch(function(){
-  document.getElementById('cargando').textContent = 'No pudimos cargar la página. Revisa tu conexión.';
+  document.getElementById('cargando').textContent = 'No pudimos cargar la campaña. Revisa tu conexión.';
 });
 
 function cargarProgreso(){
@@ -308,132 +195,25 @@ function cargarProgreso(){
 
 function money(n){ return '$'+Number(n||0).toLocaleString('es-MX',{maximumFractionDigits:0}); }
 
+// ---- Acordeones de método (solo informativos — no crean ningún registro) ----
 function cerrarPaneles(){
-  ['panelTarjeta','panelTransferencia','panelEfectivo'].forEach(function(id){
+  ['panelTransferencia','panelEfectivo'].forEach(function(id){
     document.getElementById(id).classList.remove('abierto');
   });
   ['optTransferencia','optEfectivo'].forEach(function(id){
     document.getElementById(id).classList.remove('abierto');
   });
 }
-
-document.getElementById('optTarjeta').onclick = function(){
-  if(!validarAntesDeMetodo()) return;
-  estado.metodo = 'TARJETA';
-  cerrarPaneles();
-  document.getElementById('panelTarjeta').classList.add('abierto');
-};
 document.getElementById('optTransferencia').onclick = function(){
-  if(!validarAntesDeMetodo()) return;
-  estado.metodo = 'TRANSFERENCIA';
   var yaAbierto = this.classList.contains('abierto');
   cerrarPaneles();
-  if(yaAbierto) return;
-  this.classList.add('abierto');
-  document.getElementById('panelTransferencia').classList.add('abierto');
-  if(estado.donativoID && estado.metodoCreado === 'TRANSFERENCIA') return; // ya se generaron sus datos, no duplicar
-  var btn = document.getElementById('btnDonarTransferencia');
-  btn.disabled = true;
-  document.getElementById('pvCodigo').textContent = 'Generando…';
-  var datos = Object.assign(datosBase(), { email: '', metodoPago: 'TRANSFERENCIA' });
-  llamarApi('crearDonativo', {datos: JSON.stringify(datos)}).then(function(r){
-    if(!r.ok){ mostrarError(r.mensaje || 'No se pudo generar tus datos de transferencia.'); cerrarPaneles(); return; }
-    estado.donativoID = r.donativoID;
-    estado.metodoCreado = 'TRANSFERENCIA';
-    document.getElementById('pvCodigo').textContent = r.datos.codigo;
-    btn.disabled = false;
-  }).catch(function(){
-    mostrarError('Ocurrió un error al generar tus datos de transferencia. Intenta de nuevo.');
-    cerrarPaneles();
-  });
+  if(!yaAbierto){ this.classList.add('abierto'); document.getElementById('panelTransferencia').classList.add('abierto'); }
 };
 document.getElementById('optEfectivo').onclick = function(){
-  if(!validarAntesDeMetodo()) return;
-  estado.metodo = 'EFECTIVO';
   var yaAbierto = this.classList.contains('abierto');
   cerrarPaneles();
   if(!yaAbierto){ this.classList.add('abierto'); document.getElementById('panelEfectivo').classList.add('abierto'); }
 };
-
-document.getElementById('toggleAnonimo').onclick = function(){
-  document.getElementById('cajaAnonimo').classList.toggle('on');
-};
-
-function validarAntesDeMetodo(){
-  var err = document.getElementById('errorForm');
-  err.classList.add('oculto');
-  var nombre = document.getElementById('nombre').value.trim();
-  if(!nombre || nombre.length < 3){ mostrarError('Escribe tu nombre arriba.'); return false; }
-  if(!estado.monto || estado.monto < (EV.minimo||1)){ mostrarError('Elige o escribe un monto (mínimo $'+(EV.minimo||1)+').'); return false; }
-  return true;
-}
-
-function mostrarError(m){
-  var err = document.getElementById('errorForm');
-  err.textContent = m; err.classList.remove('oculto');
-  err.scrollIntoView({behavior:'smooth', block:'center'});
-}
-
-function datosBase(){
-  return {
-    nombre: document.getElementById('nombre').value.trim(),
-    monto: estado.monto,
-    anonimo: document.getElementById('chkAnonimo').checked
-  };
-}
-
-document.getElementById('btnDonarTarjeta').onclick = function(){
-  var email = document.getElementById('email').value.trim();
-  if(!email){ mostrarError('Escribe tu correo para pagar con tarjeta.'); return; }
-  var datos = Object.assign(datosBase(), { email: email, metodoPago: 'TARJETA' });
-  enviarDonativo(datos, this, 'Ir a pagar con tarjeta');
-};
-document.getElementById('btnDonarTransferencia').onclick = function(){
-  if(!estado.donativoID){ return; } // aún generando sus datos
-  var b = this;
-  b.disabled = true; b.textContent = 'Registrando...';
-  llamarApi('transferenciaRealizada', {donativoID: estado.donativoID}).then(function(){
-    document.getElementById('paso1').classList.add('oculto');
-    document.getElementById('resTransferencia').classList.remove('oculto');
-    window.scrollTo(0,0);
-  }).catch(function(){
-    b.disabled = false; b.textContent = 'Ya realicé mi transferencia';
-    mostrarError('No se pudo registrar. Intenta de nuevo.');
-  });
-};
-document.getElementById('btnDonarEfectivo').onclick = function(){
-  var datos = Object.assign(datosBase(), { email: '', metodoPago: 'EFECTIVO' });
-  enviarDonativo(datos, this, 'Confirmar donativo');
-};
-
-function enviarDonativo(datos, btn, textoOriginal){
-  btn.disabled = true; btn.textContent = 'Procesando...';
-  llamarApi('crearDonativo', {datos: JSON.stringify(datos)}).then(function(r){
-    btn.disabled=false; btn.textContent=textoOriginal;
-    manejar(r);
-  }).catch(function(e){
-    btn.disabled=false; btn.textContent=textoOriginal;
-    mostrarError('Ocurrió un error. Intenta de nuevo. ('+e+')');
-  });
-}
-
-function manejar(r){
-  if(!r.ok){ return mostrarError(r.mensaje || 'No se pudo procesar tu donativo.'); }
-  estado.donativoID = r.donativoID;
-  if(r.siguiente === 'REDIRIGIR'){ window.location.href = r.url; return; }
-  if(r.siguiente === 'EFECTIVO') return vistaEfectivo(r);
-  if(r.siguiente === 'ALTERNATIVAS'){
-    document.getElementById('paso1').classList.add('oculto');
-    document.getElementById('resAlternativas').classList.remove('oculto');
-    document.getElementById('msgAlternativas').textContent = r.mensaje;
-  }
-}
-
-function vistaEfectivo(r){
-  document.getElementById('paso1').classList.add('oculto');
-  document.getElementById('resEfectivo').classList.remove('oculto');
-  window.scrollTo(0,0);
-}
 
 function copiar(id, btn){
   var t = document.getElementById(id).textContent;
@@ -443,6 +223,9 @@ function copiar(id, btn){
     setTimeout(function(){btn.textContent='Copiar'},1600); }catch(e){}
   document.body.removeChild(ta);
 }
+
+// "en tiempo real": refresca el termómetro solo, sin que el usuario haga nada.
+setInterval(cargarProgreso, 5000);
 </script>
 </body>
 </html>
