@@ -70,7 +70,11 @@
   }
   .card.actualizado{box-shadow:0 0 0 3px var(--acento)}
   .card.cerrado{opacity:.92}
-  .foto{width:100%;aspect-ratio:1/1;background:#e2e8f0;background-size:cover;background-position:center;position:relative}
+  /* object-fit:contain para que la foto se vea COMPLETA, respetando su propia
+     forma (vertical, horizontal o cuadrada), sin recortarla. */
+  .fotoWrap{width:100%;aspect-ratio:1/1;background:#f1f5f9;position:relative;overflow:hidden}
+  .foto{width:100%;height:100%;object-fit:contain;display:block}
+  .foto.fotoVacia{background:#e2e8f0}
   .selloVendido{
     position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     background:linear-gradient(180deg,rgba(15,23,42,.1),rgba(15,23,42,.78));
@@ -395,13 +399,15 @@ function pintar(){
   var c = document.getElementById('lista');
   c.innerHTML = ARTICULOS.map(function(a){
     var cerrado = a.estatus !== 'ABIERTO';
-    var foto = a.urlImagen ? 'background-image:url(\''+a.urlImagen+'\')' : '';
+    var fotoHtml = a.urlImagen
+      ? '<img class="foto" src="'+a.urlImagen+'" alt="">'
+      : '<div class="foto fotoVacia"></div>';
     var pillEstado = cerrado ? '<span class="pill pCerrado">Vendido</span>' : '<span class="pill pAbierto">Abierto</span>';
     var cuentaRegresiva = (!cerrado && a.segundosRestantes > 0)
       ? '<div class="cuentaRegresivaCard" id="t_'+a.articuloID+'" data-seg="'+a.segundosRestantes+'">Cierra en <span>'+fmtSeg(a.segundosRestantes)+'</span></div>'
       : '';
     return '<div class="card '+(cerrado?'cerrado':'')+'" id="card_'+a.articuloID+'">'+
-      '<div class="foto" style="'+foto+'">'+
+      '<div class="fotoWrap">'+fotoHtml+
         (cerrado ? '<div class="selloVendido"><div class="txt">🏆 VENDIDO</div></div>' : '')+
       '</div>'+
       '<div class="info">'+
