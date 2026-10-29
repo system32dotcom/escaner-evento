@@ -58,7 +58,7 @@
   .dato{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:14px}
   .dato span:last-child{font-weight:650}
 
-  .ticker{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;margin-top:4px}
+  .ticker{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;margin:4px 0 18px}
   .chipDonante{
     background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;border-radius:999px;padding:6px 13px;
     font-size:12px;white-space:nowrap;flex-shrink:0
@@ -108,7 +108,9 @@
             <div class="copiable"><span id="pvClabe"></span><button onclick="copiar('pvClabe',this)">Copiar</button></div>
             <div class="dato"><span>Banco</span><span id="pvBanco"></span></div>
             <div class="dato"><span>Beneficiario</span><span id="pvBenef"></span></div>
-            <div class="aviso ok">Realiza tu transferencia y vuelve para confirmarla o acércate al staff de donación para confirmarla.</div>
+            <p style="font-size:13px;color:#334155;margin:12px 0 0">Concepto:</p>
+            <div class="copiable"><span id="pvConcepto"></span><button onclick="copiar('pvConcepto',this)">Copiar</button></div>
+            <div class="aviso ok">Realiza tu transferencia y acércate al staff de donación para confirmarla.</div>
           </div>
         </div>
 
@@ -168,6 +170,7 @@ llamarApi('datosCampanaDonativos', {}).then(function(d){
   document.getElementById('pvClabe').textContent = d.clabe;
   document.getElementById('pvBanco').textContent = d.banco;
   document.getElementById('pvBenef').textContent = d.beneficiario;
+  document.getElementById('pvConcepto').textContent = d.conceptoDonativo;
   document.getElementById('mensajeEfectivoPreview').textContent = d.mensajeEfectivo;
 
   var metodos = d.metodosActivos || [];

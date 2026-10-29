@@ -92,8 +92,9 @@
   .pTiempo{background:#fef3c7;color:#92400e}
 
   .cuentaRegresivaCard{
-    text-align:center;font-weight:800;font-size:15px;color:#92400e;background:#fef3c7;
-    border:1px solid #fde68a;border-radius:10px;padding:9px;margin-bottom:12px;
+    text-align:center;font-weight:800;font-size:15px;color:#fff;background:#dc2626;
+    border:2px solid var(--acento);border-radius:10px;padding:9px;margin-bottom:12px;
+    box-shadow:0 4px 14px rgba(220,38,38,.35);
     animation:urgentePulso 1.1s ease-in-out infinite;font-variant-numeric:tabular-nums
   }
   @keyframes urgentePulso{0%,100%{transform:scale(1)} 50%{transform:scale(1.025)}}
@@ -227,7 +228,7 @@ var IDENTIFICADO = false;
 var MI_NOMBRE = '';
 var MI_CONTACTO = '';
 
-var prevMonto = {}, prevImagen = {}, prevEstatus = {};
+var prevMonto = {}, prevImagen = {}, prevEstatus = {}, prevCuenta = {};
 var primeraListaCargada = false;
 
 function money(n){ return '$'+Number(n||0).toLocaleString('es-MX',{maximumFractionDigits:0}); }
@@ -341,12 +342,15 @@ function cargar(){
       nuevos.forEach(function(a){
         if(prevImagen[a.articuloID] !== undefined && prevImagen[a.articuloID] !== a.urlImagen) estructural = true;
         if(prevEstatus[a.articuloID] !== undefined && prevEstatus[a.articuloID] !== a.estatus) estructural = true;
+        var ahoraCuenta = a.segundosRestantes > 0;
+        if(prevCuenta[a.articuloID] !== undefined && prevCuenta[a.articuloID] !== ahoraCuenta) estructural = true;
       });
     }
     nuevos.forEach(function(a){
       prevMonto[a.articuloID] = a.pujaActual;
       prevImagen[a.articuloID] = a.urlImagen;
       prevEstatus[a.articuloID] = a.estatus;
+      prevCuenta[a.articuloID] = a.segundosRestantes > 0;
     });
 
     document.getElementById('cargando').classList.add('oculto');
@@ -394,7 +398,7 @@ function pintar(){
     var foto = a.urlImagen ? 'background-image:url(\''+a.urlImagen+'\')' : '';
     var pillEstado = cerrado ? '<span class="pill pCerrado">Vendido</span>' : '<span class="pill pAbierto">Abierto</span>';
     var cuentaRegresiva = (!cerrado && a.segundosRestantes > 0)
-      ? '<div class="cuentaRegresivaCard" id="t_'+a.articuloID+'" data-seg="'+a.segundosRestantes+'">⏳ Cierra en <span>'+fmtSeg(a.segundosRestantes)+'</span></div>'
+      ? '<div class="cuentaRegresivaCard" id="t_'+a.articuloID+'" data-seg="'+a.segundosRestantes+'">Cierra en <span>'+fmtSeg(a.segundosRestantes)+'</span></div>'
       : '';
     return '<div class="card '+(cerrado?'cerrado':'')+'" id="card_'+a.articuloID+'">'+
       '<div class="foto" style="'+foto+'">'+
